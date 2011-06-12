@@ -33,7 +33,7 @@ def getProblems(roundid):
     return pids
 
 def saveProblems(roundid):
-    r = Round(id=roundid)
+    r = Round.objects.filter(id=roundid)[0]
     probs = getProblems(roundid)
     if len(probs) < 6:
         raise Exception('can\'t get problems')
@@ -44,7 +44,7 @@ def saveProblems(roundid):
                           name=p[3])
         problem.ptypes.add(probtype.id);
         problem.save()
-        r.problems.add(problem.id)
+        r.problems.add(p[2])
         r.save()
 
 def searchProblem(problems,division,level):
@@ -56,13 +56,13 @@ def searchProblem(problems,division,level):
 @login_required
 def index(request):
     rounds = Round.objects.all().order_by("-id")
-    hist = History.objects.filter(user=request.user).order_by("-roundid")
+    hist = History.objects.filter(user=request.user).order_by("-round")
     hists = {}
     for h in hist:
-        rid = h.roundid.id
+        rid = h.round.id
         if not rid in hists:
             hists[rid] = {
-                "rname" : h.roundid.name,
+                "rname" : h.round.name,
                 "div1_1" : False,
                 "div1_2" : False,
                 "div1_3" : False,
@@ -105,8 +105,8 @@ def create(request):
     if len(p) == 0:
         saveProblems(request.POST['round'])
     c = {
-        'problem' : searchProblem(p,toInt(request.POST['level']),
-                                  toInt(request.POST['division'])),
+        'problem' : searchProblem(p,toInt(request.POST['division']),
+                                  toInt(request.POST['level'])),
         'roundid' : request.POST['round'],
         }
     c.update(csrf(request))
@@ -114,13 +114,13 @@ def create(request):
 
 @login_required
 def create_done(request):
-    rid = Round(id=request.POST['roundid'])
+    round = Round(id=request.POST['roundid'])
     prob = Problem(id=request.POST['problemid'])
     memo = request.POST['memo'];
     code = request.POST['code'];
     hist = History(user=request.user,
-                   roundid=rid,
-                   probid=prob,
+                   round=round,
+                   problem=prob,
                    memo=memo,
                    code=code,
                    ctime=datetime.now(),

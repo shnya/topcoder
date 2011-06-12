@@ -25,8 +25,8 @@ class Round(models.Model):
 
 class History(models.Model):
     user = models.ForeignKey(User)
-    roundid = models.ForeignKey(Round)
-    probid = models.ForeignKey(Problem)
+    round = models.ForeignKey(Round)
+    problem = models.ForeignKey(Problem)
     is_practice = models.BooleanField()
     memo = models.TextField()
     code = models.TextField()
