@@ -3,7 +3,7 @@ from django.core.context_processors import csrf
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
-from tcpractice.models import ProblemType,Problem,Round,History
+from tcpractice.models import Problem,Round,History
 from django.db import transaction
 
 from datetime import datetime
@@ -29,33 +29,23 @@ def getProblems(roundid):
             start = m.end()+1
             pid = int(m.group(1))
             pname = m.group(2)
-            pids.append(((i%3)+1, (i/3)+1, pid,pname))
+            pids.append(((i%3)+1, (i/3)+1, pid, pname))
     except:
         return []
     return pids
 
 @transaction.commit_on_success
 def saveProblems(roundid):
-    r = Round.objects.get(id=roundid)
     probs = getProblems(roundid)
     if len(probs) < 6:
         raise Exception('can\'t get problems')
     for p in probs:
-        probtype = ProblemType(level=p[0],division=p[1])
-        probtype.save()
-        problem = Problem(id=p[2],
-                          name=p[3])
-        problem.ptypes.add(probtype.id);
-        problem.save()
-        r.problems.add(p[2])
-    r.save()
+        Problem(problemid=p[2],
+                name=p[3],
+                level=p[0],
+                division=p[1],
+                round=Round.objects.get(id=roundid)).save()
 
-def searchProblem(problems,division,level):
-    for p in problems:
-        for ptype in p.ptypes.all():
-            if ptype.level == level and ptype.division == division:
-                return p
-            
 @login_required
 def index(request):
     rounds = Round.objects.all().order_by("-id")
@@ -63,39 +53,21 @@ def index(request):
     hists = {}
     for h in hist:
         rid = h.round.id
+        p = h.problem
         if not rid in hists:
-            hists[rid] = {
-                "rname" : h.round.name,
-                "div1_1" : False,
-                "div1_2" : False,
-                "div1_3" : False,
-                "div2_1" : False,
-                "div2_2" : False,
-                "div2_3" : False
-                }
-        for ptype in h.probid.ptypes.all():
-            hists[rid]["div"+str(ptype.level)+"_"+str(ptype.division)] = True
-    hists2 = []
-    level_str = ["Easy","Medium","Hard"]
-    level_str2 = ["-Easy","-Medium","-Hard"]
-    for (rid,rvals) in hists.iteritems():
-        s = []
-        s.append(rvals["rname"])
-        for i in xrange(1,3):
-            s2 = ""
-            for j in xrange (1,4):
-                if rvals["div"+str(i)+"_"+str(j)] == True:
-                    s2 += level_str[j-1]
-                else:
-                    s2 += level_str2[j-1]
-            s2 += " "
-            s.append(s2)
-        hists2.append(s)
-            
+            hists[rid] = [
+                h.round.name,
+                h.round.id,
+                [False,False,False],
+                [False,False,False]
+                ]
+        hists[rid][1+p.division][p.level-1] = True
+    hists2 = hists.values()
+    hists2.sort(lambda x,y : int(y[1] - x[1]))
     c = {
         'username' : request.user.username,
         'rounds' : rounds,
-        'hists2' : hists2,
+        'hist' : hists2
         }
     c.update(csrf(request))
     return render_to_response('./index.html', c)
@@ -103,14 +75,18 @@ def index(request):
 
 @login_required
 def create(request):
-    r = Round(id=request.POST['round'])
-    p = r.problems.all()
-    if len(p) == 0:
+    p = Problem()
+    try:
+        p = Problem.objects.get(division=request.POST['division'],
+                                level=request.POST['level'],
+                                round=request.POST['round'])
+    except:
         saveProblems(request.POST['round'])
-        p = r.problems.all()
+        p = Problem.objects.get(division=request.POST['division'],
+                                level=request.POST['level'],
+                                round=request.POST['round'])
     c = {
-        'problem' : searchProblem(p,toInt(request.POST['division']),
-                                  toInt(request.POST['level'])),
+        'problem' : p,
         'roundid' : request.POST['round'],
         }
     c.update(csrf(request))
@@ -131,8 +107,8 @@ def create_done(request):
                    mtime=datetime.now())
     hist.save()
     return HttpResponseRedirect('./')
-                   
-    
+
+
 
 def login(requst):
     return HttpResponse("<html><body>login</body></html>")

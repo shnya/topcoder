@@ -30,10 +30,50 @@ Input Your Practice: <br />
 <tr>
 <th>round name</th><th>Div1</th><th>Div2</th>
 </tr>
-{% for rval in hists2 %}
+{% for h in hist %}
+{% with h|slice:"1:2"|first as roundid  %}
+{% with h|slice:"2:3"|first as div1  %}
+{% with h|slice:"3:4"|first as div2  %}
 <tr>
-<td>{{ rval|slice:"0:1"|first }}</td><td>{{ rval|slice:"1:2"|first }}</td><td>{{ rval|slice:"2:3"|first }}</td>
+<td>{{ h|slice:"0:1"|first }}</td>
+<td>
+{% if div1|slice:"0:1"|first %}
+<a href="./detail?roundid={{roundid}}&level=1&division=1">Easy</a>
+{% else %}
+Easy
+{% endif %}
+{% if div1|slice:"1:2"|first %}
+<a href="./detail?roundid={{roundid}}&level=2&division=1">Medium</a>
+{% else %}
+Medium
+{% endif %}
+{% if div1|slice:"2:3"|first %}
+<a href="./detail?roundid={{roundid}}&level=3&division=1">Hard</a>
+{% else %}
+Hard
+{% endif %}
+</td>
+<td>
+{% if div2|slice:"0:1"|first %}
+<a href="./detail?roundid={{roundid}}&level=1&division=2">Easy</a>
+{% else %}
+Easy
+{% endif %}
+{% if div2|slice:"1:2"|first %}
+<a href="./detail?roundid={{roundid}}&level=2&division=2">Medium</a>
+{% else %}
+Medium
+{% endif %}
+{% if div2|slice:"2:3"|first %}
+<a href="./detail?roundid={{roundid}}&level=3&division=2">Hard</a>
+{% else %}
+Hard
+{% endif %}
+</td>
 </tr>
+{% endwith %}
+{% endwith %}
+{% endwith %}
 {% endfor %}
 </table>
   </body>

@@ -2,26 +2,17 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-
-class ProblemType(models.Model):
-    level = models.IntegerField()
-    division = models.IntegerField()
-    class Admin:
-        pass
-
-class Problem(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=100)
-    ptypes = models.ManyToManyField(ProblemType)
-    class Admin:
-        pass
     
 class Round(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
-    problems = models.ManyToManyField('Problem')
-    class Admin:
-        pass
+
+class Problem(models.Model):
+    problemid = models.IntegerField()
+    name = models.CharField(max_length=100)
+    level = models.IntegerField(db_index=True)
+    division = models.IntegerField(db_index=True)
+    round = models.ForeignKey(Round)
 
 class History(models.Model):
     user = models.ForeignKey(User)
@@ -32,6 +23,4 @@ class History(models.Model):
     code = models.TextField()
     ctime = models.DateTimeField()
     mtime = models.DateTimeField()
-    class Admin:
-        pass
     

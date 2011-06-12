@@ -9,7 +9,7 @@
   <body>
 <form action="./create_done" method="POST">
 {% csrf_token %}
-<h2><a href="http://www.topcoder.com/stat?c=problem_statement&pm={{problem.id|escape}}&rd={{roundid|escape}}">{{ problem.name|escape }}</a></h2>
+<h2><a href="http://www.topcoder.com/stat?c=problem_statement&pm={{problem.problemid}}&rd={{roundid}}">{{ problem.name }}</a></h2>
 <input type="hidden" name="roundid" value="{{ roundid|escape }}">
 <input type="hidden" name="problemid" value="{{ problem.id|escape }}">
 memo: <br />
