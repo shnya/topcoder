@@ -96,7 +96,6 @@ def create(request):
                 return HttpResponseRedirect('./')
     except History.DoesNotExist:
         pass
-    
 
     c = {
         'problem' : p,
