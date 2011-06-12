@@ -35,10 +35,11 @@ def saveProblems(roundid):
     if len(probs) < 6:
         raise Exception("can't get problems")
     for p in probs:
-        prob,created = Problem.objects.get_or_create(problemid=p[2],
-                                             level=p[0],
-                                             division=p[1],
-                                             round=Round.objects.get(id=roundid))
+        prob,created = Problem.objects.get_or_create(
+            problemid=p[2],
+            level=p[0],
+            division=p[1],
+            round=Round.objects.get(id=roundid))
         prob.name = p[3]
         prob.save()
 
