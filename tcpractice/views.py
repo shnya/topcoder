@@ -4,6 +4,8 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from tcpractice.models import ProblemType,Problem,Round,History
+from django.db import transaction
+
 from datetime import datetime
 import urllib2
 import re
@@ -32,8 +34,9 @@ def getProblems(roundid):
         return []
     return pids
 
+@transaction.commit_on_success
 def saveProblems(roundid):
-    r = Round.objects.filter(id=roundid)[0]
+    r = Round.objects.get(id=roundid)
     probs = getProblems(roundid)
     if len(probs) < 6:
         raise Exception('can\'t get problems')
@@ -45,7 +48,7 @@ def saveProblems(roundid):
         problem.ptypes.add(probtype.id);
         problem.save()
         r.problems.add(p[2])
-        r.save()
+    r.save()
 
 def searchProblem(problems,division,level):
     for p in problems:
@@ -104,6 +107,7 @@ def create(request):
     p = r.problems.all()
     if len(p) == 0:
         saveProblems(request.POST['round'])
+        p = r.problems.all()
     c = {
         'problem' : searchProblem(p,toInt(request.POST['division']),
                                   toInt(request.POST['level'])),
