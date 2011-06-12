@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     (r'^tcpractice/$', 'topcoder.tcpractice.views.index'),
     (r'^tcpractice/create$', 'topcoder.tcpractice.views.create'),
     (r'^tcpractice/create_done$', 'topcoder.tcpractice.views.create_done'),
+    (r'^tcpractice/detail', 'topcoder.tcpractice.views.detail'),
     (r'^tcpractice/login', 'topcoder.tcpractice.views.login'),
     # Example:
     # (r'^topcoder/', include('topcoder.foo.urls')),

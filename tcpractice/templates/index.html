@@ -10,7 +10,7 @@
 <form action="./create" method="POST">
 {% csrf_token %}
 Input Your Practice: <br />
-<select name="round">
+<select name="roundid">
 {% for round in rounds %}
 <option value="{{ round.id }}">{{ round.name }}</option>
 {% endfor %}
@@ -26,6 +26,7 @@ Input Your Practice: <br />
 </select>
 <input type="submit" value="input">
 </form>
+<br />
 <table border="1">
 <tr>
 <th>round name</th><th>Div1</th><th>Div2</th>

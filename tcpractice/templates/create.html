@@ -4,18 +4,18 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta http-equiv="content-style-type" content="text/css">
     <meta http-equiv="content-script-type" content="text/javascript">
-    <title>TopCoder Practice {{ username|escape }}'s page</title>
+    <title>TopCoder Practice {{ username }}'s page</title>
   </head>
   <body>
 <form action="./create_done" method="POST">
 {% csrf_token %}
 <h2><a href="http://www.topcoder.com/stat?c=problem_statement&pm={{problem.problemid}}&rd={{roundid}}">{{ problem.name }}</a></h2>
-<input type="hidden" name="roundid" value="{{ roundid|escape }}">
-<input type="hidden" name="problemid" value="{{ problem.id|escape }}">
+<input type="hidden" name="roundid" value="{{ roundid }}">
+<input type="hidden" name="problemid" value="{{ problem.id }}">
 memo: <br />
-<textarea name="memo" rows="10" cols="80"></textarea> <br />
+<textarea name="memo" rows="10" cols="80">{{memo}}</textarea> <br />
 code: <br />
-<textarea name="code" rows="10" cols="80"></textarea> <br />
+<textarea name="code" rows="10" cols="80">{{code}}</textarea> <br />
 <input type="submit" value="submit">
 </form>
   </body>

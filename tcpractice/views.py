@@ -76,18 +76,32 @@ def index(request):
 @login_required
 def create(request):
     p = Problem()
+    r = Round.objects.get(id=request.POST['roundid'])
     try:
         p = Problem.objects.get(division=request.POST['division'],
                                 level=request.POST['level'],
-                                round=request.POST['round'])
+                                round=r)
     except:
-        saveProblems(request.POST['round'])
+        saveProblems(request.POST['roundid'])
         p = Problem.objects.get(division=request.POST['division'],
                                 level=request.POST['level'],
-                                round=request.POST['round'])
+                                round=r)
+    memo = ""
+    code = ""
+    try:
+        hist = History.objects.get(user=request.user,
+                                round=r,
+                                problem=p)
+        memo = hist.memo
+        code = hist.code
+    except:
+        pass
+
     c = {
         'problem' : p,
-        'roundid' : request.POST['round'],
+        'roundid' : request.POST['roundid'],
+        'memo' : memo,
+        'code' : code
         }
     c.update(csrf(request))
     return render_to_response('./create.html',c)
@@ -95,19 +109,44 @@ def create(request):
 @login_required
 def create_done(request):
     round = Round(id=request.POST['roundid'])
-    prob = Problem(id=request.POST['problemid'])
+    prob = Problem.objects.get(id=request.POST['problemid'])
     memo = request.POST['memo'];
     code = request.POST['code'];
-    hist = History(user=request.user,
-                   round=round,
-                   problem=prob,
-                   memo=memo,
-                   code=code,
-                   ctime=datetime.now(),
-                   mtime=datetime.now())
-    hist.save()
+    try:
+        hist = History.objects.get(user=request.user,
+                                   round=round,
+                                   problem=prob)
+        hist.memo = memo
+        hist.code = code
+        hist.mtime = datetime.now()
+    except:
+        hist = History(user=request.user,
+                       round=round,
+                       problem=prob,
+                       memo=memo,
+                       code=code,
+                       ctime=datetime.now(),
+                       mtime=datetime.now())
+    finally:
+        hist.save()
     return HttpResponseRedirect('./')
 
+@login_required
+def detail(request):
+    r = Round.objects.get(id=request.GET['roundid'])
+    prob = Problem.objects.get(level=request.GET['level'],
+                               division=request.GET['division'],
+                               round=r)
+    hist = History.objects.get(user=request.user,
+                               round=r,
+                               problem=prob)
+    c = {
+        'hist' : hist,
+        'problem' : prob,
+        'roundid' : request.GET['roundid'],
+        }
+    c.update(csrf(request))
+    return render_to_response('./detail.html',c)
 
 
 def login(requst):
