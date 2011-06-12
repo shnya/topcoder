@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="content-style-type" content="text/css">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <title>TopCoder Practice {{ username }}'s page</title>
+  </head>
+  <body>
+<a href="./">go to top.</a>
+<form action="./create" method="POST">
+{% csrf_token %}
+<h2>{{round.name}} Div.{{problem.division}} {{level}}</h2>
+<h2><a href="http://www.topcoder.com/stat?c=problem_statement&pm={{problem.problemid}}&rd={{round.id}}" target="_blank">{{ problem.name }}</a> <span style="font-size: small;">(last modified: {{date}})</span></h2>
+<input type="hidden" name="roundid" value="{{ round.id }}">
+<input type="hidden" name="level" value="{{ problem.level }}">
+<input type="hidden" name="division" value="{{ problem.division}}">
+<input type="submit" value="edit"> <input type="submit" name="delete" value="delete">
+<h3>memo:</h3>
+<pre style="background-color: #F7F7FB; border: medium solid #999999; padding: 5px; width: 600px;">
+{{hist.memo}}
+</pre>
+<h3>code:</h3>
+<pre style="background-color: #F7F7FB; border: medium solid #999999; padding: 5px; width: 600px;">
+{{hist.code}}
+</pre> <br />
+</form>
+<h3>hatena notation:</h3>
+<pre style="background-color: #F7F7FB; border: medium solid #999999; padding: 5px; width: 800px;">
+* [http://www.topcoder.com/stat?c=problem_statement&pm={{problem.problemid}}&rd={{round.id}}:title={{round.name}} Div.{{problem.division}} {{level}} {{ problem.name }}]
+
+{{hist.memo}}
+
+====
+&gt;|cpp|
+{{hist.code}}
+||&lt;
+</pre> <br />
+
+  </body>
+</html>

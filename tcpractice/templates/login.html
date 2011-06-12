@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="content-style-type" content="text/css">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <title>TopCoder Practice {{ username }}'s page</title>
+  </head>
+  <body>
+    <div align="center">
+      {% if error_message %}
+      <p style="color: red;">{{ error_message }}</p>
+      {% endif %}
+      <div id="content-main" style="border: solid medium #999999; width: 300px; padding: 30px;">
+        <div align="left" style="margin-bottom: 20px;">Login Form:</div>
+        <form action="./login" method="post" id="login-form">
+          {% csrf_token %}
+          <div>
+            <label>Username:</label> <input type="text" name="username" id="id_username" />
+          </div>
+          <div>
+            <label>Password:</label> <input type="password" name="password" id="id_password" />
+            <input type="hidden" name="this_is_the_login_form" value="1" />
+          </div>
+          <div>
+            <label>&nbsp;</label><input type="submit" value="login" />
+          </div>
+        </form>
+        <br />
+        <br />
+        <div align="left" style="margin-bottom: 20px;">If you don't have account...</div>
+        <form action="./create_user" method="post" id="login-form">
+          {% csrf_token %}
+          <div>
+            <label>Username:</label> <input type="text" name="username" id="id_username" />
+          </div>
+          <div>
+            <label>Password:</label> <input type="password" name="password" id="id_password" />
+            <input type="hidden" name="this_is_the_login_form" value="1" />
+          </div>
+          <div>
+            <label>&nbsp;</label><input type="submit" value="create" />
+          </div>
+        </form>
+        <script type="text/javascript">
+          document.getElementById('id_username').focus()
+        </script>
+      </div>
+    </div>
+  </body>
+</html>
