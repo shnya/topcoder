@@ -4,12 +4,14 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta http-equiv="content-style-type" content="text/css">
     <meta http-equiv="content-script-type" content="text/javascript">
-    <title>TopCoder Practice {{ username|escape }}'s page</title>
+    <title>TopCoder Practice {{ username }}'s page</title>
   </head>
   <body>
+Hello, {{ username }}. (<a href="./logout">Not {{username}}</a>?)
+
 <form action="./create" method="POST">
 {% csrf_token %}
-Input Your Practice: <br />
+<h2>Input your practice history</h2>
 <select name="roundid">
 {% for round in rounds %}
 <option value="{{ round.id }}">{{ round.name }}</option>
@@ -26,7 +28,7 @@ Input Your Practice: <br />
 </select>
 <input type="submit" value="input">
 </form>
-<br />
+<h2>The problems solved</h2>
 <table border="1">
 <tr>
 <th>round name</th><th>Div1</th><th>Div2</th>
@@ -77,5 +79,6 @@ Hard
 {% endwith %}
 {% endfor %}
 </table>
+<br />
   </body>
 </html>

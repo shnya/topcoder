@@ -9,8 +9,9 @@
   <body>
 <form action="./create_done" method="POST">
 {% csrf_token %}
-<h2><a href="http://www.topcoder.com/stat?c=problem_statement&pm={{problem.problemid}}&rd={{roundid}}">{{ problem.name }}</a></h2>
-<input type="hidden" name="roundid" value="{{ roundid }}">
+<h2>{{round.name}} Div.{{problem.division}} {{level}}</h2>
+<h2><a href="http://www.topcoder.com/stat?c=problem_statement&pm={{problem.problemid}}&rd={{round.id}}">{{ problem.name }}</a></h2>
+<input type="hidden" name="roundid" value="{{ round.id }}">
 <input type="hidden" name="problemid" value="{{ problem.id }}">
 memo: <br />
 <textarea name="memo" rows="10" cols="80">{{memo}}</textarea> <br />

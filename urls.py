@@ -9,7 +9,9 @@ urlpatterns = patterns('',
     (r'^tcpractice/create$', 'topcoder.tcpractice.views.create'),
     (r'^tcpractice/create_done$', 'topcoder.tcpractice.views.create_done'),
     (r'^tcpractice/detail', 'topcoder.tcpractice.views.detail'),
-    (r'^tcpractice/login', 'topcoder.tcpractice.views.login'),
+    (r'^tcpractice/login', 'topcoder.tcpractice.views.login_view'),
+    (r'^tcpractice/logout$', 'topcoder.tcpractice.views.logout_view'),
+    (r'^tcpractice/create_user$', 'topcoder.tcpractice.views.create_new_user'),
     # Example:
     # (r'^topcoder/', include('topcoder.foo.urls')),
 
