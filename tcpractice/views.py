@@ -47,6 +47,7 @@ def saveProblems(roundid):
 def index(request):
     rounds = Round.objects.all().order_by("-id")
     hist = History.objects.filter(user=request.user).order_by("-round")
+    cnt = History.objects.filter(user=request.user).count()
     hists = {}
     for h in hist:
         rid = h.round.id
@@ -64,7 +65,8 @@ def index(request):
     c = {
         'username' : request.user.username,
         'rounds' : rounds,
-        'hist' : hists2
+        'hist' : hists2,
+        'hist_count' : cnt
         }
     c.update(csrf(request))
     return render_to_response('./index.html', c)
@@ -136,8 +138,10 @@ def detail(request):
     hist = History.objects.get(user=request.user,
                                round=r,
                                problem=prob)
+    date = hist.mtime.strftime("%Y/%m/%d %H:%M")
     c = {
         'hist' : hist,
+        'date' : date,
         'problem' : prob,
         'round' : r,
         'level' : ['Easy','Medium','Hard'][prob.level-1]

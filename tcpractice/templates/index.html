@@ -28,7 +28,8 @@ Hello, {{ username }}. (<a href="./logout">Not {{username}}</a>?)
 </select>
 <input type="submit" value="input">
 </form>
-<h2>The problems solved</h2>
+<h2>The problems solved ({{ hist_count }} solved)</h2>
+{% ifnotequal hist_count 0 %}
 <table border="1">
 <tr>
 <th>round name</th><th>Div1</th><th>Div2</th>
@@ -79,6 +80,7 @@ Hard
 {% endwith %}
 {% endfor %}
 </table>
+{% endifnotequal %}
 <br />
   </body>
 </html>
