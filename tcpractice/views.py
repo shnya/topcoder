@@ -1,9 +1,8 @@
 # Create your views here.
-from django.core.context_processors import csrf
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
-from tcpractice.models import Problem,Round,History
+from topcoder.tcpractice.models import Problem,Round,History
 from django.db import transaction
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
@@ -68,7 +67,6 @@ def index(request):
         'hist' : hists2,
         'hist_count' : cnt
         }
-    c.update(csrf(request))
     return render_to_response('./index.html', c)
 
 
@@ -101,13 +99,13 @@ def create(request):
         pass
 
     c = {
+        'username' : request.user.username,
         'problem' : p,
         'round' : r,
         'memo' : memo,
         'code' : code,
         'level' : ['Easy','Medium','Hard'][p.level-1]
         }
-    c.update(csrf(request))
     return render_to_response('./create.html',c)
 
 @login_required
@@ -140,13 +138,13 @@ def detail(request):
                                problem=prob)
     date = hist.mtime.strftime("%Y/%m/%d %H:%M")
     c = {
+        'username' : request.user.username,
         'hist' : hist,
         'date' : date,
         'problem' : prob,
         'round' : r,
         'level' : ['Easy','Medium','Hard'][prob.level-1]
         }
-    c.update(csrf(request))
     return render_to_response('./detail.html',c)
 
 @login_required
@@ -160,21 +158,18 @@ def login_view(request):
                             password=request.POST['password'])
         if user == None:
             c = {"error_message": "Failed Login"}
-            c.update(csrf(request))
             return render_to_response('./login.html',c)
         else:
             login(request,user)
             return HttpResponseRedirect('./')
     else:
         c = {"error_message":False}
-        c.update(csrf(request))
         return render_to_response('./login.html',c)
 
 def create_new_user(request):
     try:
         User.objects.get(username=request.POST['username'])
         c = {"error_message":"This account already exists."}
-        c.update(csrf(request))
         return render_to_response('./login.html',c)
     except User.DoesNotExist:
         User.objects.create_user(request.POST['username'],

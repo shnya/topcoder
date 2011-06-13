@@ -9,7 +9,7 @@
   <body>
 <a href="./">go to top.</a>
 <form action="./create_done" method="POST">
-<h2>{{round.name}} Div{{problem.division}} {{level}}</h2>
+<h2>{{round.name}} Div.{{problem.division}} {{level}}</h2>
 <h2><a href="http://www.topcoder.com/stat?c=problem_statement&pm={{problem.problemid}}&rd={{round.id}}" target="_blank">{{ problem.name }}</a></h2>
 <input type="hidden" name="roundid" value="{{ round.id }}">
 <input type="hidden" name="problemid" value="{{ problem.id }}">

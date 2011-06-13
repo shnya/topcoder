@@ -9,7 +9,7 @@
   <body>
 <a href="./">go to top.</a>
 <form action="./create" method="POST">
-<h2>{{round.name}} Div{{problem.division}} {{level}}</h2>
+<h2>{{round.name}} Div.{{problem.division}} {{level}}</h2>
 <h2><a href="http://www.topcoder.com/stat?c=problem_statement&pm={{problem.problemid}}&rd={{round.id}}" target="_blank">{{ problem.name }}</a> <span style="font-size: small;">(last modified: {{date}})</span></h2>
 <input type="hidden" name="roundid" value="{{ round.id }}">
 <input type="hidden" name="level" value="{{ problem.level }}">
@@ -26,7 +26,7 @@
 </form>
 <h3>hatena notation:</h3>
 <pre style="background-color: #F7F7FB; border: medium solid #999999; padding: 5px; width: 800px;">
-* [http://www.topcoder.com/stat?c=problem_statement&pm={{problem.problemid}}&rd={{round.id}}:title={{round.name}} Div{{problem.division}} {{level}} {{ problem.name }}]
+* [http://www.topcoder.com/stat?c=problem_statement&pm={{problem.problemid}}&rd={{round.id}}:title={{round.name}} Div.{{problem.division}} {{level}} {{ problem.name }}]
 
 {{hist.memo}}
 
